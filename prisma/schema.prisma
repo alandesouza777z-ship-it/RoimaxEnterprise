@@ -1,0 +1,166 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  EXECUTIVE
+  OPERATOR
+  CREATIVE
+}
+
+enum OfferStatus {
+  DRAFT
+  ACTIVE
+  PAUSED
+  COMPLETED
+}
+
+enum OfferPriority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum DelegationStatus {
+  OPEN
+  IN_PROGRESS
+  DONE
+  CANCELLED
+}
+
+enum DelegationPriority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum OperationWeekday {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+}
+
+model User {
+  id                   String       @id @default(cuid())
+  username             String       @unique
+  displayName          String
+  passwordHash         String
+  role                 UserRole
+  workspaceSlug        String
+  disabledAt           DateTime?
+  createdAt            DateTime     @default(now())
+  updatedAt            DateTime     @updatedAt
+
+  sessions               Session[]
+  ownedOffers            Offer[]          @relation("OfferOwner")
+  assignedDelegations    Delegation[]     @relation("DelegationAssignee")
+  createdDelegations     Delegation[]     @relation("DelegationCreator")
+  createdOperationBlocks OperationBlock[] @relation("OperationBlockCreator")
+}
+
+model Session {
+  id         String   @id @default(cuid())
+  token      String   @unique
+  userId     String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+}
+
+model Offer {
+  id         String         @id @default(cuid())
+  slug       String         @unique
+  title      String
+  status     OfferStatus    @default(DRAFT)
+  priority   OfferPriority  @default(MEDIUM)
+  dueDate    DateTime?
+  ownerId    String
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+
+  owner       User          @relation("OfferOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  delegations Delegation[]
+  artifacts   Artifact[]
+
+  @@index([ownerId])
+  @@index([status])
+}
+
+model Delegation {
+  id           String              @id @default(cuid())
+  slug         String              @unique
+  title        String
+  status       DelegationStatus    @default(OPEN)
+  priority     DelegationPriority  @default(MEDIUM)
+  dueDate      DateTime?
+  assigneeId   String
+  createdById  String
+  offerId      String?
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+
+  assignee     User                @relation("DelegationAssignee", fields: [assigneeId], references: [id], onDelete: Cascade)
+  createdBy    User                @relation("DelegationCreator", fields: [createdById], references: [id], onDelete: Cascade)
+  offer        Offer?              @relation(fields: [offerId], references: [id], onDelete: SetNull)
+
+  @@index([assigneeId])
+  @@index([createdById])
+  @@index([offerId])
+  @@index([status])
+}
+
+model OperationBlock {
+  id            String           @id @default(cuid())
+  slug          String           @unique
+  title         String
+  weekday       OperationWeekday
+  workspaceSlug String
+  createdById   String
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  createdBy User @relation("OperationBlockCreator", fields: [createdById], references: [id], onDelete: Cascade)
+
+  @@index([workspaceSlug, weekday])
+  @@index([createdById])
+}
+
+model Artifact {
+  id            String   @id @default(cuid())
+  sourcePath    String   @unique
+  sourceSystem  String   @default("agents-lab")
+  fileName      String
+  title         String
+  fileType      String
+  artifactType  String
+  preview       String
+  workspaceSlug String
+  offerId       String?
+  storageKey    String?
+  publicUrl     String?
+  generatedAt   DateTime?
+  metadataJson  String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  offer Offer? @relation(fields: [offerId], references: [id], onDelete: SetNull)
+
+  @@index([workspaceSlug, updatedAt])
+  @@index([offerId])
+  @@index([sourceSystem])
+}

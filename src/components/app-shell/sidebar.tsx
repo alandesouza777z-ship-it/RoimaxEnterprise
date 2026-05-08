@@ -1,14 +1,13 @@
 "use client";
 
-import { UserRole } from "@prisma/client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { getNavItems } from "@/components/app-shell/navigation";
+import { getNavItems, type AppShellRole } from "@/components/app-shell/navigation";
 
 type SidebarProps = {
   workspaceSlug: string;
-  role: UserRole;
+  role: AppShellRole;
 };
 
 export function Sidebar({ workspaceSlug, role }: SidebarProps) {

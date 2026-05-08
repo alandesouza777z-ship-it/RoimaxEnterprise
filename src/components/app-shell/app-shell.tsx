@@ -1,15 +1,14 @@
 import type { ReactNode } from "react";
 
+import { type AppShellRole } from "@/components/app-shell/navigation";
 import { Sidebar } from "@/components/app-shell/sidebar";
 import { Topbar } from "@/components/app-shell/topbar";
-
-import { UserRole } from "@prisma/client";
 
 type AppShellProps = {
   children: ReactNode;
   displayName: string;
   workspaceSlug: string;
-  role: UserRole;
+  role: AppShellRole;
 };
 
 export function AppShell({ children, displayName, workspaceSlug, role }: AppShellProps) {

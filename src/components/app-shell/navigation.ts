@@ -1,6 +1,12 @@
-import { UserRole } from "@prisma/client";
+export type AppShellRole = "ADMIN" | "EXECUTIVE" | "OPERATOR" | "CREATIVE";
 
-import { isAdminRole, isOperationalRole } from "@/lib/auth/roles";
+function isAdminRole(role: AppShellRole) {
+  return role === "ADMIN";
+}
+
+function isOperationalRole(role: AppShellRole) {
+  return role === "ADMIN" || role === "EXECUTIVE" || role === "OPERATOR";
+}
 
 export type Workspace = {
   slug: string;
@@ -36,7 +42,7 @@ export const WORKSPACES: Workspace[] = [
   },
 ];
 
-export function getNavItems(workspaceSlug: string, role: UserRole): NavItem[] {
+export function getNavItems(workspaceSlug: string, role: AppShellRole): NavItem[] {
   const items: NavItem[] = [
     {
       label: "Dashboard",

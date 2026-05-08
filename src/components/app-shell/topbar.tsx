@@ -1,12 +1,11 @@
-import { UserRole } from "@prisma/client";
-
 import { LogoutButton } from "@/components/app-shell/logout-button";
+import { type AppShellRole } from "@/components/app-shell/navigation";
 import { WorkspaceSwitcher } from "@/components/app-shell/workspace-switcher";
 
 type TopbarProps = {
   displayName: string;
   workspaceSlug: string;
-  role: UserRole;
+  role: AppShellRole;
 };
 
 export function Topbar({ displayName, workspaceSlug, role }: TopbarProps) {

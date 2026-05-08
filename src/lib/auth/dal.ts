@@ -3,7 +3,7 @@ import { cache } from "react";
 import { forbidden, redirect } from "next/navigation";
 
 import { OPERATIONAL_ROLES, isAdminRole } from "@/lib/auth/roles";
-import { deleteExpiredSessions, getSessionToken, touchSession } from "@/lib/auth/session";
+import { deleteExpiredSessions, getSessionToken } from "@/lib/auth/session";
 import { prisma } from "@/lib/prisma";
 
 export const getCurrentUser = cache(async () => {
@@ -24,7 +24,6 @@ export const getCurrentUser = cache(async () => {
     return null;
   }
 
-  await touchSession(token);
   return session.user;
 });
 

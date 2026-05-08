@@ -5,7 +5,7 @@
 Environment variables loaded from .env
 Prisma schema loaded from prisma\schema.prisma
 
-✔ Generated Prisma Client (v6.16.2) to .\node_modules\@prisma\client in 171ms
+✔ Generated Prisma Client (v6.16.2) to .\node_modules\@prisma\client in 161ms
 
 Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
 
@@ -15,15 +15,15 @@ Tip: Need your database queries to be 1000x faster? Accelerate offers you that a
 - Environments: .env
 
   Creating an optimized production build ...
-✓ Compiled successfully in 7.9s
+✓ Compiled successfully in 6.4s
   Running TypeScript ...
-  Finished TypeScript in 8.4s ...
+  Finished TypeScript in 7.7s ...
   Collecting page data using 7 workers ...
   Generating static pages using 7 workers (0/5) ...
   Generating static pages using 7 workers (1/5) 
   Generating static pages using 7 workers (2/5) 
   Generating static pages using 7 workers (3/5) 
-✓ Generating static pages using 7 workers (5/5) in 364ms
+✓ Generating static pages using 7 workers (5/5) in 582ms
   Finalizing page optimization ...
 
 Route (app)

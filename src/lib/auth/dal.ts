@@ -7,13 +7,13 @@ import { deleteExpiredSessions, getSessionToken, touchSession } from "@/lib/auth
 import { prisma } from "@/lib/prisma";
 
 export const getCurrentUser = cache(async () => {
-  await deleteExpiredSessions();
-
   const token = await getSessionToken();
 
   if (!token) {
     return null;
   }
+
+  await deleteExpiredSessions();
 
   const session = await prisma.session.findUnique({
     where: { token },
